@@ -15,10 +15,8 @@ const signup = async (req, res) => {
         message: "User already exists",
       });
     }
-
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create new user
     const newUser = await userModel.create({
       name,
@@ -40,6 +38,7 @@ const signup = async (req, res) => {
   }
 };
 
+// User login controller
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -83,6 +82,15 @@ const login = async (req, res) => {
       token, // include token inside user
     };
 
+    // res
+    //   .status(200)
+    //   .cookie("token", token, options)
+    //   .json({
+    //     success: true,
+    //     message: "Login successful",
+    //     user: userData, 
+    //     token,
+    //   });
     res
       .status(200)
       .cookie("token", token, options)

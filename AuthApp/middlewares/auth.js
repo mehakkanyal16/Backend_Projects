@@ -1,12 +1,13 @@
 const jwt=require("jsonwebtoken");
 require("dotenv").config();
-
-
 const auth = (req, res, next) => {
   // Authentication logic here
   try{
-    
-    const token=req.body.token||req.cookie.token;
+        console.log("==== Incoming Auth Request ====");
+    console.log("Cookies:", req.cookies);
+    console.log("Authorization Header:", req.header("Authorization"));
+    console.log("Body:", req.body);
+    const token=req.body.token||req.cookies.token||req.header("Authorization")?.replace("Bearer ","");
     if(!token){
         return res.status(401).json({
             success:false,  
@@ -15,7 +16,6 @@ const auth = (req, res, next) => {
     }
     //verify the token 
     try{
-
     const decoded=jwt.verify(token,process.env.JWT_SECRET);
     console.log("Decoded token:",decoded);
     req.user=decoded;   // Attach user info to request object
@@ -27,8 +27,6 @@ const auth = (req, res, next) => {
             error:err.message
         });
     }
-  
-
   }catch(err){
     return res.status(401).json({
         success:false,  
@@ -36,8 +34,6 @@ const auth = (req, res, next) => {
         error:err.message
     });
   }
-
-
   next();
 };
 

@@ -10,7 +10,15 @@ router.post('/signup', signup);
 // User login
 router.post('/login', login);
 
-module.exports = router;
+
+router.post('/check-token', (req, res) => {
+  console.log("Body Token:", req.body.token);
+  console.log("Cookie Token:", req.cookies?.token);
+  console.log("Header Token:", req.header("Authorization"));
+
+  const token = req.body.token || req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
+  return res.json({ receivedToken: token });
+});
 
 //protected routes: 
 router.get('/test',auth,(req,res)=>{
@@ -36,3 +44,5 @@ router.get('/admin',auth,isAdmin,(req,res)=>{
         user:req.user
     });
 });
+
+module.exports = router;
